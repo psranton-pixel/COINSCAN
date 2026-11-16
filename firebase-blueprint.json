@@ -1,0 +1,264 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Registered coin collector profile and preferences.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "User UID"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User email address"
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "User display name"
+        },
+        "preferredCurrency": {
+          "type": "string",
+          "enum": ["USD", "AUD", "GBP", "EUR", "CAD"],
+          "description": "User preferred display currency"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Account creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last updated timestamp"
+        }
+      },
+      "required": ["id", "email", "preferredCurrency", "createdAt", "updatedAt"]
+    },
+    "Coin": {
+      "title": "Coin Record",
+      "description": "A coin cataloged in a user's private collection.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique coin identifier"
+        },
+        "owner_user_id": {
+          "type": "string",
+          "description": "UID of the user who owns this coin"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "Coin display title"
+        },
+        "country": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Country of origin"
+        },
+        "denomination": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Denomination value and unit"
+        },
+        "year": {
+          "type": "number",
+          "description": "Year of manufacture or minting"
+        },
+        "mintMark": {
+          "type": "string",
+          "maxLength": 60,
+          "description": "Mint mark identifier (e.g. S, D, P, CC)"
+        },
+        "series": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Coin series or design family"
+        },
+        "metalComposition": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Composition breakdown (e.g. 90% Silver 10% Copper, 24K Gold, Cupro-Nickel)"
+        },
+        "weightGrams": {
+          "type": "number",
+          "description": "Weight in grams"
+        },
+        "diameterMm": {
+          "type": "number",
+          "description": "Diameter in millimeters"
+        },
+        "rarity": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Rarity classification (e.g. Common, Scarce, Rare, Key Date)"
+        },
+        "estimatedGrade": {
+          "type": "string",
+          "maxLength": 40,
+          "description": "Estimated Sheldon grade (e.g. MS-65, AU-50, VF-20, G-4)"
+        },
+        "conditionDetails": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Details regarding wear, strike, luster, or surface marks"
+        },
+        "historicalSignificance": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Historical context and numismatic notes"
+        },
+        "estimatedValue": {
+          "type": "number",
+          "description": "Median estimated current market value in preferred currency"
+        },
+        "lowValue": {
+          "type": "number",
+          "description": "Conservative lower auction comp value"
+        },
+        "highValue": {
+          "type": "number",
+          "description": "Upper premium auction comp value"
+        },
+        "bullionMeltValue": {
+          "type": "number",
+          "description": "Precious metal intrinsic melt value"
+        },
+        "faceValue": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Legal tender face value"
+        },
+        "currency": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "Currency code for valuation"
+        },
+        "valuationConfidence": {
+          "type": "number",
+          "description": "Confidence percentage between 0 and 100"
+        },
+        "valuationDate": {
+          "type": "string",
+          "description": "Timestamp of valuation generation"
+        },
+        "purchasePrice": {
+          "type": "number",
+          "description": "Amount paid by user"
+        },
+        "purchaseDate": {
+          "type": "string",
+          "description": "Date purchased"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity owned"
+        },
+        "category": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Collection category tag"
+        },
+        "isFavorite": {
+          "type": "boolean",
+          "description": "Whether marked as a favorite"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["in_collection", "sold", "wishlist"],
+          "description": "Status in collection"
+        },
+        "soldPrice": {
+          "type": "number",
+          "description": "Amount sold for if applicable"
+        },
+        "soldDate": {
+          "type": "string",
+          "description": "Date sold if applicable"
+        },
+        "personalNotes": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Collector notes, storage location, provenance"
+        },
+        "obverseImage": {
+          "type": "string",
+          "description": "Front transparent PNG image data/URL"
+        },
+        "reverseImage": {
+          "type": "string",
+          "description": "Reverse transparent PNG image data/URL"
+        },
+        "originalObverseImage": {
+          "type": "string",
+          "description": "Raw uncropped front photo"
+        },
+        "originalReverseImage": {
+          "type": "string",
+          "description": "Raw uncropped reverse photo"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update timestamp"
+        }
+      },
+      "required": ["id", "owner_user_id", "title", "country", "createdAt", "updatedAt"]
+    },
+    "Category": {
+      "title": "Collection Category",
+      "description": "Custom collector categories defined by user.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Category ID"
+        },
+        "owner_user_id": {
+          "type": "string",
+          "description": "Owner UID"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Category name"
+        },
+        "color": {
+          "type": "string",
+          "maxLength": 30,
+          "description": "Hex color or accent identifier"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation date"
+        }
+      },
+      "required": ["id", "owner_user_id", "name"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "User"
+      },
+      "description": "User profile and personal preferences."
+    },
+    "/users/{userId}/coins/{coinId}": {
+      "schema": {
+        "$ref": "Coin"
+      },
+      "description": "Private coin collection entries owned strictly by the authenticated user."
+    },
+    "/users/{userId}/categories/{categoryId}": {
+      "schema": {
+        "$ref": "Category"
+      },
+      "description": "Custom categories defined by the user for organizing their collection."
+    }
+  }
+}

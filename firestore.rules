@@ -1,0 +1,129 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default-deny all unmapped operations
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['id', 'email', 'preferredCurrency', 'createdAt', 'updatedAt'])
+        && data.id is string && data.id.size() <= 128
+        && data.email is string && data.email.size() <= 150
+        && data.preferredCurrency in ['USD', 'AUD', 'GBP', 'EUR', 'CAD']
+        && (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 100))
+        && data.createdAt is string
+        && data.updatedAt is string;
+    }
+
+    function isValidCoin(data) {
+      return data.keys().hasAll(['id', 'owner_user_id', 'title', 'country', 'createdAt', 'updatedAt'])
+        && data.id is string && data.id.size() <= 128
+        && data.owner_user_id is string && data.owner_user_id.size() <= 128
+        && data.title is string && data.title.size() <= 300
+        && data.country is string && data.country.size() <= 120
+        && (!('denomination' in data) || data.denomination == null || (data.denomination is string && data.denomination.size() <= 120))
+        && (!('year' in data) || data.year == null || data.year is number)
+        && (!('mintMark' in data) || data.mintMark == null || (data.mintMark is string && data.mintMark.size() <= 60))
+        && (!('series' in data) || data.series == null || (data.series is string && data.series.size() <= 200))
+        && (!('metalComposition' in data) || data.metalComposition == null || (data.metalComposition is string && data.metalComposition.size() <= 200))
+        && (!('weightGrams' in data) || data.weightGrams == null || data.weightGrams is number)
+        && (!('diameterMm' in data) || data.diameterMm == null || data.diameterMm is number)
+        && (!('rarity' in data) || data.rarity == null || (data.rarity is string && data.rarity.size() <= 100))
+        && (!('estimatedGrade' in data) || data.estimatedGrade == null || (data.estimatedGrade is string && data.estimatedGrade.size() <= 100))
+        && (!('estimatedValue' in data) || data.estimatedValue == null || data.estimatedValue is number)
+        && (!('lowValue' in data) || data.lowValue == null || data.lowValue is number)
+        && (!('highValue' in data) || data.highValue == null || data.highValue is number)
+        && (!('bullionMeltValue' in data) || data.bullionMeltValue == null || data.bullionMeltValue is number)
+        && (!('faceValue' in data) || data.faceValue == null || (data.faceValue is string && data.faceValue.size() <= 100))
+        && (!('currency' in data) || data.currency == null || (data.currency is string && data.currency.size() <= 20))
+        && (!('valuationConfidence' in data) || data.valuationConfidence == null || data.valuationConfidence is number)
+        && (!('purchasePrice' in data) || data.purchasePrice == null || data.purchasePrice is number)
+        && (!('quantity' in data) || data.quantity == null || data.quantity is number)
+        && (!('category' in data) || data.category == null || (data.category is string && data.category.size() <= 120))
+        && (!('isFavorite' in data) || data.isFavorite == null || (data.isFavorite is bool))
+        && (!('status' in data) || data.status == null || (data.status is string && data.status.size() <= 50))
+        && (!('isSample' in data) || data.isSample == null || (data.isSample is bool))
+        && (!('sku' in data) || data.sku == null || (data.sku is string && data.sku.size() <= 120))
+        && (!('storageLocation' in data) || data.storageLocation == null || (data.storageLocation is string && data.storageLocation.size() <= 120))
+        && (!('costBasisType' in data) || data.costBasisType == null || (data.costBasisType is string && data.costBasisType.size() <= 50))
+        && (!('purchaseCurrency' in data) || data.purchaseCurrency == null || (data.purchaseCurrency is string && data.purchaseCurrency.size() <= 20))
+        && (!('listingPlatform' in data) || data.listingPlatform == null || (data.listingPlatform is string && data.listingPlatform.size() <= 120))
+        && (!('listingUrl' in data) || data.listingUrl == null || (data.listingUrl is string && data.listingUrl.size() <= 600))
+        && (!('listingStatus' in data) || data.listingStatus == null || (data.listingStatus is string && data.listingStatus.size() <= 60))
+        && (!('askingPrice' in data) || data.askingPrice == null || data.askingPrice is number)
+        && (!('soldPrice' in data) || data.soldPrice == null || data.soldPrice is number)
+        && (!('soldCurrency' in data) || data.soldCurrency == null || (data.soldCurrency is string && data.soldCurrency.size() <= 20))
+        && (!('soldDate' in data) || data.soldDate == null || (data.soldDate is string && data.soldDate.size() <= 60))
+        && (!('soldQuantity' in data) || data.soldQuantity == null || data.soldQuantity is number)
+        && (!('sellingFees' in data) || data.sellingFees == null || data.sellingFees is number)
+        && (!('sellerPaidPostage' in data) || data.sellerPaidPostage == null || data.sellerPaidPostage is number)
+        && (!('otherDirectCosts' in data) || data.otherDirectCosts == null || data.otherDirectCosts is number)
+        && (!('realizedNetProfit' in data) || data.realizedNetProfit == null || data.realizedNetProfit is number)
+        && (!('bullionType' in data) || data.bullionType == null || (data.bullionType is string && data.bullionType.size() <= 60))
+        && (!('metalCategory' in data) || data.metalCategory == null || (data.metalCategory is string && data.metalCategory.size() <= 60))
+        && (!('fineness' in data) || data.fineness == null || data.fineness is number)
+        && (!('valuationMethodology' in data) || data.valuationMethodology == null || (data.valuationMethodology is string && data.valuationMethodology.size() <= 60))
+        && (!('evidenceQuality' in data) || data.evidenceQuality == null || (data.evidenceQuality is string && data.evidenceQuality.size() <= 60))
+        && (!('isProvisionalValuation' in data) || data.isProvisionalValuation == null || (data.isProvisionalValuation is bool))
+        && (!('valuationDate' in data) || data.valuationDate == null || (data.valuationDate is string && data.valuationDate.size() <= 60))
+        && (!('lastValuationUpdate' in data) || data.lastValuationUpdate == null || (data.lastValuationUpdate is string && data.lastValuationUpdate.size() <= 60))
+        && data.createdAt is string
+        && data.updatedAt is string;
+    }
+
+    function isValidCategory(data) {
+      return data.keys().hasAll(['id', 'owner_user_id', 'name'])
+        && data.id is string && data.id.size() <= 128
+        && data.owner_user_id is string && data.owner_user_id.size() <= 128
+        && data.name is string && data.name.size() <= 100;
+    }
+
+    // User profile matching the authenticated user ID
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false; // Blanket user listing forbidden for privacy
+      allow create: if isOwner(userId) && isValidUser(incoming()) && incoming().id == userId;
+      allow update: if isOwner(userId) && isValidUser(incoming()) && incoming().id == existing().id && incoming().createdAt == existing().createdAt;
+      allow delete: if isOwner(userId);
+
+      // Private user's coins subcollection
+      match /coins/{coinId} {
+        allow get: if isOwner(userId) && isValidId(coinId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(coinId) && isValidCoin(incoming()) && incoming().owner_user_id == request.auth.uid;
+        allow update: if isOwner(userId) && isValidId(coinId) && isValidCoin(incoming()) && incoming().owner_user_id == existing().owner_user_id && incoming().id == existing().id && incoming().createdAt == existing().createdAt;
+        allow delete: if isOwner(userId) && isValidId(coinId);
+      }
+
+      // Private user's custom categories
+      match /categories/{categoryId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(categoryId) && isValidCategory(incoming()) && incoming().owner_user_id == request.auth.uid;
+        allow update: if isOwner(userId) && isValidId(categoryId) && isValidCategory(incoming()) && incoming().owner_user_id == existing().owner_user_id;
+        allow delete: if isOwner(userId) && isValidId(categoryId);
+      }
+    }
+  }
+}

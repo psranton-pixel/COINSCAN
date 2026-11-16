@@ -1,0 +1,6 @@
+{
+  "name": "CoinScan Pro",
+  "description": "Professional AI Coin Scanner, Identification, Valuation & Collection Management App.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
